@@ -1,0 +1,528 @@
+\documentclass[12pt]{jsarticle}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  パッケージ                                               %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath,amssymb}%数式
+\usepackage{amsthm}%定理環境
+\usepackage[all]{xy}%可換図式
+\usepackage{framed}%文章を箱で囲う
+\usepackage[dvipdfmx, usenames]{color}%色をつける
+%\usepackage{ulem}%下線、波線、取り消し線
+\usepackage{amsfonts}%数式のフォント
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  よく使う黒板太字                                         %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\T}{\mathbb{T}}%トーラス
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  カリグラフィー体                                          %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\CX}[1]{\mathcal{C}(#1)}%連続関数
+\newcommand{\CCX}[1]{\mathcal{C}_c(#1)}%コンパクト台連続関数
+\newcommand{\CIX}[1]{\mathcal{C}^{\infty}(#1)}
+\newcommand{\CCIX}[1]{\mathcal{C}_c^{\infty}(#1)}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  青太字                                                  %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\textblue}[1]{\textcolor{blue}{\textbf{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  よく使う記号                                             %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\single}{\{ 0 \}}%0のシングルトン
+\newcommand{\I}{\sqrt{-1}}%虚数単位。\iは既にある。
+\newcommand{\abs}[1]{\left \lvert #1 \right \rvert}%絶対値
+\newcommand{\norm}[1]{\left \lVert #1 \right \rVert}%ノルム
+\newcommand{\transpose}[1]{\, {\vphantom{#1}}^t\!{#1}}%行列の転置
+\newcommand{\inprod}[2]{\langle #1 , #2 \rangle}%内積
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  log型演算子                                              %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\Image}{Image}
+\DeclareMathOperator{\supp}{supp}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  番号なし定理環境                                         %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\theoremstyle{definition}%定理環境のアルファベットを斜体にしない
+\newtheorem*{theorem}{定理}
+\newtheorem*{definition}{定義}
+\newtheorem*{prop}{命題}
+\newtheorem*{lemma}{補題}
+\newtheorem*{example}{例}
+\newtheorem*{rem}{注意}
+\newtheorem*{note}{注記}
+\newtheorem*{corollary}{系}
+\newtheorem*{quo}{引用}%quote,quotationはすでにある
+\renewcommand{\proofname}{\textgt{証明}}%proof環境の修正
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  左線をひく                                               %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%leftbarの定義
+\makeatletter
+\renewenvironment{leftbar}{%
+%  \def\FrameCommand{\vrule width 3pt \hspace{10pt}}%  デフォルトの線の太さは3pt
+  \renewcommand\FrameCommand{\vrule width 1pt \hspace{10pt}}%
+  \MakeFramed {\advance\hsize-\width \FrameRestore}}%
+ {\endMakeFramed}
+ %左線つき太見出し環境の略記
+ \newcommand{\barquo}[1]{\begin{leftbar} \begin{quo}  #1 \end{quo} \end{leftbar}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  section                                                 %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ \newcommand{\bfsubsection}[1]{\subsection*{\textbf{#1}}}
+
+\begin{document}
+
+
+\title{小林俊行・大島利雄\\「リー群と表現論」}
+\author{@seasawher}
+\maketitle
+
+\section*{\S 1.1 位相群}
+
+%注意：--はエヌダッシュで、-(ハイフン)とは異なる。
+\bfsubsection{例1.3}
+\barquo{ベクトル空間に位相が定義されており、位相群の構造をもつとき、\textbf{線形位相空間}(topological vector space)(あるいは位相ベクトル空間)と呼ぶ。}
+
+\begin{note}
+  位相ベクトル空間の定義には、スカラー倍$K \times V \to V$の連続性も必要である。これが他の条件から導かれず、必要であることをみるには位相体$K$として密着位相が入っているようなものを考えればよい。
+  \end{note}
+
+  \bfsubsection{例1.4}
+  \barquo{
+  $p$を$2,3,5, \cdots$などの素数とし、自然な射影
+  \[
+  \cdots \to \Z / p^4 \Z \to \Z / p^3 \Z \to \Z / p^2 \Z \to \Z / p \Z
+  \]
+  の射影極限$\varprojlim\limits_{n} \Z / p^n \Z $%\limitsはnの出力箇所の調整のため
+  を$\Z_p$と表す。
+  }
+  \begin{note}
+    これに関連して次のような定理が知られている。
+  \end{note}
+\begin{prop}
+  反変関手$G \colon \N^{op} \to \mathbf{TopGroup}$があり、各射$f \colon i \to j $ $(i \leq j)$に対して$Gf \colon G_j \to G_i$が全射であるとする。このとき$\varprojlim G$が存在して、$\mathbf{Top}$上でのlimit $\varprojlim \, (G \colon \N^{op} \to \mathbf{Top})$と一致する。
+\end{prop}
+
+したがって$\Z_p$は存在し、位相群である。
+
+\barquo{
+$\Z_p$はLie群ではないが、コンパクト位相群の構造をもつことが知られている。
+}
+\begin{proof}
+  まず$\Z_p$がコンパクトであることを示そう。$\Z_p$はコンパクトHausdorff空間$\prod_{n=1}^{\infty} \Z / p^n \Z$の部分集合であり、連続写像の値が一致する集合として定義されているから、閉集合である。よって$\Z_p$はコンパクト。
+
+  Lie群でないことを見るために、まず$\Z_p$が完全不連結(各点$x$を含む連結成分が$\{ x\}$)であることを示そう。$x \in \Z_p$とし、$x$の連結成分に$y \neq x$が含まれるかどうかを考える。$r = \abs{x-y}_p$とすると十分小さな$\varepsilon$について
+\begin{align*}
+  B &= \{ z \in \Z_p \mid \abs{z-x}_p \leq r - \varepsilon \} \\
+  &= \{ z \in \Z_p \mid \abs{z-x}_p < r - \varepsilon \}
+\end{align*}
+だから、$x$の連結成分は$B$に含まれており、$y$を含まないことが判る。よって、完全不連結であることがいえた。
+
+ここで$\Z_P$がもしLie群なら、$\Z_p$の完全不連結性より$\Z_p$は0次元多様体でなくてはならない。しかしこれは$\Z_p$が離散的でないことに矛盾する。
+\end{proof}
+
+\bfsubsection{例1.7--例1.8 間}
+\barquo{
+位相群$G$の(代数的な意味での)部分群$H$は自然に位相群となる。$\cdots$
+これを$G$における$H$の相対位相(relative topology)という。この位相に関して$H$が位相群となることは容易に確かめられる。
+}
+\begin{proof}
+$H$がHausdorff空間であることはあきらか。積と逆元の連続性だけ示す。
+自然な包含写像を$i \colon H \to G$とし、$\alpha \colon G \times G \to G$を$\alpha(g,h)=gh^{-1}$により定める。$\alpha$の$H \times H$への制限を$\beta$と書くことにする。このとき次の図式は可換。
+\[
+\xymatrix{ G \times G \ar[r]^{\alpha} & G  \\ H \times H \ar[u]^{i \times i} \ar[r]^{\beta} & H \ar[u]_i }
+\]
+$H$の開部分集合$V = U \cap H$をとると
+\begin{align*}
+\beta^{-1}(V) &= \beta^{-1} \circ i^{-1}(U) \\
+&= (\alpha \circ (i \times i))^{-1}(U)
+\end{align*}
+は$H \times H$の開部分集合であるから、示せた。
+\end{proof}
+
+
+\bfsubsection{例1.8--例1.9 間}
+\barquo{
+$H$は$G \ltimes H$の閉正規部分群であり、位相群としての同型$(G \ltimes H)/ H \cong G$が得られる。
+}
+\begin{proof}
+  (1) $i \colon H \to G$を自然な包含写像だとする。このとき$i(H) \subset G \ltimes H$が閉正規部分群であること : $H$が正規部分群であることは、射影準同形の核に等しいことからあきらか。閉部分集合であることは、$i(H)^c = G\setminus \{ e \} \times H$が開部分集合であることからすぐに判る。\\
+  (2) $G \ltimes H/H$が位相群であること : $H$は閉部分集合なので$G \ltimes H/H$はHausdorff空間。積と逆元の連続性をいうには、次のLemmaをいえば十分である。
+  \begin{lemma}
+    $G$が(Hausdorffとは限らない)位相群で、$H \lhd G$であるとき、$G/H$も(Hausdorffとは限らない)位相群である。
+  \end{lemma}
+\begin{proof}
+$\alpha \colon G \times G \to G$を$\alpha(g,h)=gh^{-1}$により定める。$\beta \colon G/H \times G/H \to G/H$も同様に定める。$\pi \colon G \to G/H$を自然な商写像とする。$\pi$はあきらかに全射かつ連続だが、位相群であることから開写像であることもいえる。このとき次の図式が可換。
+\[
+\xymatrix{
+G \times G \ar[r]^{\alpha} \ar[d]_{\pi \times \pi} & G \ar[d]^{\pi} \\
+G/H \times G/H \ar[r]^{\beta} & G/H
+}
+\]
+したがって
+\begin{align*}
+\beta^{-1} &= (\pi \times \pi) \circ (\pi \times \pi)^{-1}\circ \beta^{-1} \\
+&= (\pi \times \pi) \circ ( \beta \circ (\pi \times \pi))^{-1} \\
+&= (\pi \times \pi) \circ (\pi \circ \alpha)^{-1}
+\end{align*}
+となる。ここで$\pi \circ \pi$は開写像だから、$\beta$の連続性がいえた。
+\end{proof}
+(3) $G \ltimes H /H \cong G$であること : $p \colon G \ltimes H \to G$を射影準同形とする。$p$はあきらかに連続かつ開写像である。$p$の核は$H$であるので、商群の普遍性により次の図式を可換にするような連続準同形$f$が存在する。
+\[
+\xymatrix{
+G \ltimes H \ar[r]^p \ar[d]_{\pi} & G \\
+G \ltimes H / H \ar[ur]_f
+}
+\]
+$f$はあきらかに全単射であり、$f$が開写像であることを示せば十分である。しかしそれは$f = f \circ \pi \circ \pi^{-1} = p \circ \pi^{-1}$によりあきらか。
+\end{proof}
+
+
+
+\section*{\S 1.2 位相群の表現}
+\bfsubsection{定義1.16--定義1.17 間}
+\barquo{
+$W$が$G$-不変な部分空間とするとき, $\pi_W \colon G \to GL(W)$を$g \mapsto \pi(g)|_W$で定めると$(\pi_W, W)$も$G$の表現となる。これを$G$の\textbf{部分表現}(subrepresentation)という。$\cdots$ このようにして得られた表現$(\pi_{V/W},V/W)$を$G$の$\textbf{商表現}$(quotient representation)という。
+}
+\begin{note}
+  それぞれ$V$の部分表現、$V$の商表現の誤りと思われる。
+\end{note}
+
+\bfsubsection{例1.21}
+\barquo{
+$v$を$\C^n$の0でない任意の元とすると、$gv \in W$となる適当な$g \in GL(n,\C)$を選ぶことができる。
+}
+\begin{note}
+次の補題を示せばよい。
+\end{note}
+\begin{lemma}
+    $G = GL(n,\C)$は$\C^n \setminus \single$に推移的に作用する。
+\end{lemma}
+\begin{proof}
+  $v \in \C^n \setminus \single$とする。$L = \{ x \in \C^n \mid \transpose{x}v = 0\}$とすると$v \neq 0$より$L$は$n-1$次元空間。$L$の基底$l_1, \ldots , l_{n-1}$をとり、行列
+  \[
+  A=\frac{1}{\norm{v}^2} \begin{pmatrix}
+   \overline{\transpose{v}} \\
+   \transpose{l_1} \\
+   \vdots \\
+   \transpose{l_{n-1}} \\
+\end{pmatrix}
+  \]
+を考えると、$A \in GL(n,\C)$であり、$Av=e_1$が成り立つ。したがって$G$の作用は推移的である。
+\end{proof}
+
+\bfsubsection{例1.22}
+\barquo{
+さらに, $(\pi,\C^2)$の$G$-不変部分空間は$\single$, $W$, $\C^2$の3つのみであることが簡単な計算でわかる。
+}
+\begin{proof}
+  $M$が$(\pi,\C^2)$の部分表現であって、ある$(a,b) \in M$について$b \neq 0$だと仮定する。$b$で割って、$(a,1) \in M$なる$a \in \C$があるとしてよい。
+  \[
+  \begin{pmatrix}
+    1 & t \\ 0 & 1
+  \end{pmatrix}
+  \begin{pmatrix}
+    a \\ 1
+  \end{pmatrix}
+  = \begin{pmatrix}
+  a + t \\ 1
+\end{pmatrix}
+\in M
+  \]
+より、$t = 1$としてとくに$(a+1,1) \in M$がわかる。したがって、この2つのベクトルは一次独立なので$M=\C^2$でなくてはいけない。
+\end{proof}
+
+\bfsubsection{定義1.29--定義1.30 間}
+\barquo{
+逆に、ノルムが(1.15)を満たすならば、分極公式(polarization identity)
+\[
+4(u,v)= \norm{u+v}^2 - \norm{u-v}^2 + \I(\norm{u+\I v}^2 - \norm{u - \I v}^2)
+\]
+によって内積が復元される。
+}
+\begin{note}
+宮島\cite{宮島}p.285 定理4.11を参照のこと。
+\end{note}
+
+\bfsubsection{命題1.36--例1.37 間}
+\barquo{
+$(\pi_{\lambda}, V_{\lambda})$ $(\lambda \in \Lambda)$を位相群$G$のユニタリ表現の可算個の族とする。
+}
+\begin{note}
+  \textblue{「どうして可算個でなくてはならないのか？」}という疑問が出た。可分でないHilbert空間を考えたくないからだろうか。結論は出なかった。
+\end{note}
+
+
+\bfsubsection{例1.37}
+\barquo{
+$\sum_{n \in \Z}^{\oplus} \C = l^2(\Z)$
+}
+\begin{note}
+  $\bigoplus_{n \in \Z} \C \subset l^2(\Z)$は稠密であり、$l^2(\Z)$は完備であることからわかる。
+\end{note}
+
+
+\bfsubsection{例1.44}
+\barquo{
+$t \not\in \pi\Z$では, $\pi(t)$は実固有値をもたないので, 矛盾である.
+}
+\begin{note}
+トレースと行列式を考えればあきらか。
+\end{note}
+
+
+\barquo{
+例1.44では簡単な行列計算によって
+\[
+\Hom_G(\R^2,\R^2) \cong \{ a\pi(\theta) \mid a \in \R, \theta \in \R \}
+\]
+となることがわかる.
+}
+\begin{note}
+$SO(2)$のすべての元と可換な$M(2,\R)$の元全体が右辺と一致することを見ればよい。
+\end{note}
+
+\bfsubsection{注意1.46}
+\barquo{
+$V$および$V'$が無限次元のHilbert空間の場合にも, 次の定理が成り立つ。$(\pi,V)$および$(\pi',V')$を群$G$の既約ユニタリ表現とする。このとき
+\[
+\Hom_G(\pi,\pi') = \begin{cases}
+0 &(\pi \not\cong \pi' \, \text{のとき}) \\
+\C T &(\pi \cong \pi' \, \text{のとき})
+\end{cases}
+\]
+となる. ここで、$T \colon V \to V'$は$(\pi,V)$と$(\pi',V')$の同型を与えるユニタリ作用素である。
+}
+\begin{rem}
+詳しくはFolland\cite{Folland}の(3.5)を参照のこと。ここで$\Hom_G$は連続な$G$-linear写像の全体であり、引用部の同型$\cong$は単なる同型ではなくユニタリ同型を指す。
+\end{rem}
+
+
+
+
+
+
+\section*{\S 1.3 種々の表現を構成する操作}
+\bfsubsection{命題1.49--命題1.50間}
+\barquo{
+$\overline{V}$は複素ベクトル空間としての構造をもつ。
+}
+\begin{rem}
+  $\overline{V}$の加法単位元$0$は$0 \cdot \overline{v}$や$\overline{0}$と一致する。
+\end{rem}
+
+
+\bfsubsection{(d) 命題1.50--命題1.51間}
+\barquo{
+このとき(1.27)で述べた基底がそれぞれのベクトル空間の正規直交基底となるように (中略)
+に内積を定義する。このようにして定義された内積は$V$や$W$の正規直交基底のとり方によらない。
+}
+\begin{rem}
+$\overline{V}$上の内積を$\langle \overline{v}, \overline{w} \rangle= \langle v, w \rangle$で定めれば自然に内積空間になりユニタリ表現となる。$V^{\vee}$上の内積はリースの表現定理により同様に誘導される。他も同様。このように定めると正規直交基底の取り方によらないことを示す必要がない。
+\end{rem}
+
+
+\bfsubsection{補題1.53}
+\barquo{
+まず、$\psi$がユニタリ表現であることを示そう。
+}
+\begin{rem}
+  Rieszの表現定理による同型はユニタリであることを用いてもよい。
+\end{rem}
+
+
+\section*{\S1.4 Hilbertの第5問題}
+\bfsubsection{定理1.54}
+\barquo{
+$M(n,\R) \cong \R^{n^2}$の閉集合$G$が, 行列の群演算に関して閉じていれば, $G$は$M(n,\R)$の相対位相に関してLie群となる。特に$G$は多様体となる。
+}
+\begin{rem}
+部分群かつLie群であれば、閉部分群となるので、この定理でははじめから閉集合と仮定している。
+\end{rem}
+
+\barquo{
+一方, $\R^n$の閉集合というだけでは, 多様体にならないものがたくさんある. 例えばCantor集合がその例である.
+}
+\begin{rem}
+  「完全不連結なコンパクトHausdorff空間はCantor集合に同相である」ことより、Cantor集合の例として$p$進整数環をあげることができる。
+\end{rem}
+
+
+
+
+\section*{\S2.1 Fourier級数}
+\bfsubsection{定理2.3 直前}
+\barquo{
+さらに, ``可換群の有限次元既約表現はすべて1次元である''という定理(Schurの補題の系; 系1.43)を思い出せば, 次の定理が成り立つことがわかる。
+}
+\begin{rem}
+ただし$\C$上の表現に限る。
+\end{rem}
+
+
+
+
+
+\section*{\S 2.2 Fourier変換とアファイン変換群}
+\bfsubsection{定義2.5--定理2.6間 式(2.8)}
+\barquo{
+$f \in \CCIX{\R^n}$に対する逆変換の公式
+\[
+f(x) = \frac{1}{(2\pi)^{n/2}} \int_{\R^n} \F f(\xi)e^{\I \inprod{x}{\xi}} \, d\xi
+\]
+が成り立つ。
+}
+\begin{rem}
+  この命題は$\CCIX{\R^n}$から$L^1(\R^n)$に延長しようとすると少し問題が生ずる。$L^1(\R^n)$の元のFourier変換は$L^1(\R^n)$の元であるとは限らないからである。たとえば、$n=1$として区間$[-1,1]$の定義関数のFourier変換は
+  \[
+  \sqrt{\frac{2}{\pi}} \times \frac{\sin \xi}{\xi}
+  \]
+  であることを見ればわかる。$L^2(\R^n)$に話を持って行けばうまくいく。
+\end{rem}
+
+\newpage
+\bfsubsection{定理2.6--定理2.7 間}
+\barquo{
+Plancherelの定理(定理2.6(iv))は加法群$\R^n$のユニタリ表現$(\pi,L^2(\R^n))$を既約表現に分解する定理と解釈できる.
+}
+\begin{rem}
+  直後の定理2.7に矛盾する。\textblue{わけがわからない。}なお$\R^n$を$\T$に置き換えれば次のように正しい。可換群$\T$の表現
+  \[
+  \pi \colon \T \to GL_{\C}(L^2(\T))
+  \]
+  を同様に定める。関数$e_n \colon x \mapsto e^{\I nx}$は$\T$のコンパクト性により$L^2(\T)$の元である。このとき$e_n$が張る$L^2(\T)$の一次元部分空間は部分表現でもある。Plancherelの定理により、[黒田]\cite{黒田}定理3.11から$\{ e_n \}$は完全正規直交系となる。(注:内積または測度を適当に調整して正規化する) ゆえに$(\pi,L^2(\T))$の既約分解
+  \[
+  L^2(\T) = \bigoplus_{n \in \Z} \C e_n
+  \]
+  を得る。
+\end{rem}
+
+
+\bfsubsection{補題2.8}
+\barquo{
+$\R^n$上の測度$\mu$を$d\mu(\xi)=e^{-\norm{\xi}^2}d\xi_1 \cdots d\xi_n$と定義する.
+}
+\begin{rem}
+  $\R^n$上の可測関数$f$に対して
+  \[
+  \int_{\R^n} f \, d\mu = \int_{\R^n} f(\xi) e^{-\norm{\xi}^2} \, d\xi_1 \cdots d\xi_n
+  \]
+  とする。このときLebesgue可測集合$A$について
+  \[
+  \mu(A)=\int_{\R^n} 1_{A} \, d\mu
+  \]
+  とすると$\mu$は$\R^n$上の測度である。
+\end{rem}
+
+
+
+\barquo{
+$E = \bigcup_j E_j$とおくと, $E$は可測集合であり$\mu (E) \geq A$が成り立つ。
+}
+\begin{rem}
+  任意に$\epsilon > 0$が与えられたとする。$A- \epsilon < \mu(E_j)$なる$E_j$があるので$\mu (E) \geq \mu(E_j) \geq A- \epsilon$である。よって$\mu(E) \geq A$である。
+\end{rem}
+
+
+\barquo{
+一方, $\mu(E) \geq A$なので, $\mu(E')=0$が示された。
+}
+\begin{rem}
+  $\mu$での測度が0なら、Lebesgue測度でも零集合であるということに注意する。
+\end{rem}
+
+
+\bfsubsection{補題 2.8 直後}
+\barquo{
+さらに$\lambda \in \C$に対して関数空間$L^2(\R^n)$への作用(表現)を,
+\[
+\pi_{\lambda} \colon L^2(\R^n) \to L^2(\R^n), \quad f(x) \mapsto \abs{\det A}^{- \lambda} f(g^{-1} \cdot x)
+\]
+と定義する。
+}
+\begin{rem}
+  ここで、正の実数$a$の複素数$\lambda$乗は
+  \[
+a^{\lambda} = \exp(\lambda \log a)
+  \]
+  において$\log a$の枝として虚部が0であるものを選ぶことにより定義する。
+\end{rem}
+
+
+\bfsubsection{補題 2.9 直前}
+\begin{rem}
+  \textblue{誤植がある。}$e^{\I \inprod{x}{\xi}}$が2カ所あるがどちらも$e^{- \I \inprod{x}{\xi}}$の誤り。
+\end{rem}
+
+
+\bfsubsection{補題 2.9}
+\begin{rem}
+帰結として$\varpi_{\lambda}$は表現になり、かつユニタリとなる。証明はきわめてやさしい。
+\end{rem}
+
+
+\section*{\S 3.1 行列要素}
+\bfsubsection{定義3.1 直前}
+\barquo{
+$v \in V$, $f \in V^{\vee}$を固定して考えると,
+\[
+\Phi_{\pi}(v,f)(g) = \inprod{\pi(g)^{-1}v}{f} = \inprod{v}{\pi^{\vee}(g)f}
+\]
+は$G$上の連続関数となる.
+}
+\begin{proof}
+  $V$は有限次元と仮定しているので、$f \colon V \to \C$は連続写像である。よって$G \times V \to V \; \text{via} \; (g,v) \mapsto \pi^{-1}(g)v$と$V \to \C \; \text{via} \; x \mapsto f(x)$の合成は連続である。$\Phi_{\pi}(v,f)$は、その$G \times \{ v\}$上への制限なので、連続である。
+\end{proof}
+
+
+\bfsubsection{定理3.3 直前}
+\barquo{
+位相空間$X$の各点において相対コンパクトな近傍が存在するとき, $X$を局所コンパクト位相空間と呼ぶ.
+}
+\begin{rem}
+  $X$がHausdorff空間であるとき、次の三つの条件は同値である。(内田\cite{内田}定理24.1)
+  \begin{enumerate}
+    \item 任意の点に対してコンパクトな近傍が少なくとも一つある。
+    \item 任意の点に対して相対コンパクトな開近傍が少なくとも一つある。
+    \item コンパクトな近傍全体が基本近傍系をなす。
+  \end{enumerate}
+\end{rem}
+
+
+\barquo{
+Euclid空間$\R^n$やコンパクト位相空間(およびその部分集合に相対位相を入れたもの)は局所コンパクト位相空間の例である。
+}
+\begin{rem}
+  \textblue{この記述は誤り。}一般に局所コンパクト空間の部分集合に相対位相を入れたものは局所コンパクトにならない。たとえば$\Q \subset \R$は局所コンパクトでない。コンパクト空間の部分空間についても同様。仮定を適切に課せば、次の命題が成り立つ。
+\end{rem}
+\begin{prop}
+$X$が局所コンパクト空間、$Y \subset X$とする。このとき次が成り立つ。
+\begin{enumerate}
+  \item $Y$が$X$の閉部分空間なら、$Y$も局所コンパクト。
+  \item $X$が局所コンパクトHausdorff空間で$Y$が$X$の開部分集合なら、$Y$も局所コンパクト。
+\end{enumerate}
+\end{prop}
+
+\begin{thebibliography}{9}%
+  \bibitem{内田} 内田伏一『集合と位相』(裳華房, 1986)
+  \bibitem{宮島} 宮島静雄『関数解析』(横浜図書, 2005)
+  \bibitem{黒田} 黒田成俊『関数解析』(共立出版, 1980)
+  \bibitem{Folland} Gerald B. Folland 『A Course in Abstract Harmonic Analysis』(CRC Press, 1994)
+\end{thebibliography}
+
+\end{document}
