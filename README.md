@@ -1,1 +1,2 @@
-# liegroups_and_representation
+# なにこれ
+小林・大島「リー群と表現論」のノートです。
